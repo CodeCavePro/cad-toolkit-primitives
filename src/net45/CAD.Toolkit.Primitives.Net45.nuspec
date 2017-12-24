@@ -1,0 +1,20 @@
+<?xml version="1.0"?>
+<package >
+  <metadata>
+    <id>CodeCave.$id$.NetFramework</id>
+    <title>$id$.NetFramework</title>
+    <owners>salaros, CodeCave</owners>
+    <tags>cad, cadd, computer aided design, primitives, thumbnails</tags>
+    <releaseNotes></releaseNotes>
+    <dependencies></dependencies>
+    <references></references>
+    <projectUrl>https://github.com/CodeCavePro/cad-toolkit-primitives</projectUrl>
+    <licenseUrl>https://github.com/CodeCavePro/cad-toolkit-primitives/blob/master/LICENSE.txt</licenseUrl>
+    <requireLicenseAcceptance>true</requireLicenseAcceptance>
+    <version>$version$</version>
+    <authors>$author$</authors>
+    <copyright>$copyright$</copyright>
+    <summary>$description$</summary>
+    <description>$description$</description>
+  </metadata>
+</package>

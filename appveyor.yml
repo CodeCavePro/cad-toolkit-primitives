@@ -1,0 +1,114 @@
+# Operating system (build VM template)
+os: Windows Server 2016
+
+# If the build configuration does not specify build worker image
+# then Visual Studio 2015 image is used.
+image: Visual Studio 2017
+
+# Restrict to Git branches below
+branches:
+  only:
+    - master
+
+# Scripts that run after cloning repository
+install:
+  - nuget restore
+
+# Cache files until appveyor.yml is modified.
+cache:
+  - packages -> **\packages.config  # preserve "packages" directory in the root of build folder but will reset it if packages.config is modified
+  - '%LocalAppData%\NuGet\Cache'    # NuGet < v3
+  - '%LocalAppData%\NuGet\v3-cache' # NuGet v3
+
+# Version format
+version: 1.0.{build}
+
+init:
+- ps: |
+    if ($env:APPVEYOR_REPO_TAG -eq "true" -and $env:APPVEYOR_REPO_TAG_NAME)
+    {
+        $tag_name = $env:APPVEYOR_REPO_TAG_NAME
+        Write-Host "Building a tag: $tag_name";
+        if ($tag_name -match '([0-9]+[\.-][0-9]+[\.-][0-9]+)')
+        {
+            Update-AppveyorBuild -Version $env:APPVEYOR_REPO_TAG_NAME
+        } else {
+            Write-Host "Git tag is not a valid version: $tag_name";
+        }
+    } else {
+        Update-AppveyorBuild -Version $env:APPVEYOR_BUILD_VERSION
+        Write-Host "Using build version: $env:APPVEYOR_BUILD_VERSION";
+    }
+
+dotnet_csproj:
+  patch: true
+  file: '**\*.csproj'
+  version: $(APPVEYOR_BUILD_VERSION)
+  assembly_version: $(APPVEYOR_BUILD_VERSION)
+  file_version: $(APPVEYOR_BUILD_VERSION)
+  package_version: $(APPVEYOR_BUILD_VERSION)-beta'
+  informational_version: '$(APPVEYOR_BUILD_VERSION)-beta'
+
+assembly_info:
+  patch: true
+  file: '**\AssemblyInfo.*'
+  assembly_version: $(APPVEYOR_BUILD_VERSION)
+  assembly_file_version: $(APPVEYOR_BUILD_VERSION)
+  assembly_informational_version: '$(APPVEYOR_BUILD_VERSION)-beta'
+
+# Run scripts below before
+before_build:
+  - where msbuild
+  - cmd: msbuild /t:Clean 
+
+# To run your custom scripts instead of automatic MSBuild
+build_script:
+  - cmd: msbuild /t:Rebuild /p:Configuration=Debug
+
+# NuGet files qualified as artifacts
+artifacts:
+  - path: 'bin\**\*.nupkg' # find the NuGet files
+    name: CAD_Toolkit_Primitives
+
+# Deploy to GitHub releases
+deploy: 
+  - 
+    provider: GitHub
+    auth_token: 
+      secure: 2+d0KgCbWQpUR8TZfzvUEzbi4NQP6F/Tt0PUwLn6jXZCyO8FnrFVFJPsFa0QBQFl
+    artifact: CAD_Toolkit_Primitives
+    description: |-
+        * for .NET Standard 2.0 (.NET Core 2.0, .NET Framework >= 4.6.1 etc) use CodeCave.CAD.Toolkit.Primitives.$(APPVEYOR_BUILD_VERSION).nupkg file
+        * for .NET Framework 4.5.x use CodeCave.CAD.Toolkit.Primitives.NetFramework.$(APPVEYOR_BUILD_VERSION).nupkg file
+    draft: false
+    force_update: true
+    prerelease: false
+    release: "CAD.Toolkit.Primitives v$(APPVEYOR_REPO_TAG_NAME)"
+    tag: $(APPVEYOR_REPO_TAG_NAME)
+    on: 
+      appveyor_repo_tag: true
+
+  - 
+    provider: NuGet
+    api_key: 
+      secure: TrtChQUTQ9rD8pffK1A9bjMYyN/8eQUjV+7IKVjS/C37TgXMae46Bzd527bZUVSb
+    artifact: CAD_Toolkit_Primitives
+    server:             # remove to push to NuGet.org
+    skip_symbols: false
+    symbol_server:      # remove to push symbols to SymbolSource.org
+    on: 
+      appveyor_repo_tag: true
+
+  -
+    provider: NuGet
+    server: https://ci.appveyor.com/nuget/salaros/api/v2/package
+    symbol_server: https://ci.appveyor.com/nuget/salaros/api/v2/package
+    api_key:
+      secure: 3zmnmVBweTgdk4SBM/rWHdC9JOM9s0pxm1bw1d+WHDo=
+    artifact: CAD_Toolkit_Primitives
+
+# Start builds on tags only (GitHub and BitBucket)
+skip_non_tags: false
+
+# Turn off tests
+test: off
