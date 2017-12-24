@@ -21,7 +21,7 @@ cache:
   - '%LocalAppData%\NuGet\v3-cache' # NuGet v3
 
 # Version format
-version: 1.0.{build}
+version: 1.0.4.{build}
 
 init:
 - ps: |
@@ -48,16 +48,16 @@ dotnet_csproj:
   file: '**\*.csproj'
   assembly_version: $(APPVEYOR_BUILD_VERSION)
   file_version: $(APPVEYOR_BUILD_VERSION)
-  version: '$(APPVEYOR_BUILD_VERSION)-beta'
-  package_version: '$(APPVEYOR_BUILD_VERSION)-beta'
-  informational_version: '$(APPVEYOR_BUILD_VERSION)-beta'
+  version: '$(APPVEYOR_BUILD_VERSION)'
+  package_version: '$(APPVEYOR_BUILD_VERSION)'
+  informational_version: '$(APPVEYOR_BUILD_VERSION)'
 
 assembly_info:
   patch: true
   file: '**\AssemblyInfo.*'
   assembly_version: $(APPVEYOR_BUILD_VERSION)
   assembly_file_version: $(APPVEYOR_BUILD_VERSION)
-  assembly_informational_version: '$(APPVEYOR_BUILD_VERSION)-beta'
+  assembly_informational_version: '$(APPVEYOR_BUILD_VERSION)'
 
 # Run scripts below before
 before_build:
