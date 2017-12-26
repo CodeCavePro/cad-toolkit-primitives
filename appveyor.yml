@@ -95,8 +95,13 @@ deploy:
       secure: 2+d0KgCbWQpUR8TZfzvUEzbi4NQP6F/Tt0PUwLn6jXZCyO8FnrFVFJPsFa0QBQFl
     artifact: CAD_Toolkit_Primitives
     description: |-
-        * for .NET Standard 2.0 (.NET Core 2.0, .NET Framework >= 4.6.1 etc) use CodeCave.CAD.Toolkit.Primitives.$(APPVEYOR_BUILD_VERSION).nupkg file
-        * for .NET Framework 4.5.x use CodeCave.CAD.Toolkit.Primitives.NetFramework.$(APPVEYOR_BUILD_VERSION).nupkg file
+        Supports the following .NET frameworks and standards 
+        * .NET 4.0 
+        * [.NET 4.5.2](https://github.com/Microsoft/dotnet/blob/master/releases/net452/README.md) 
+        * [.NET 4.6.1](https://github.com/Microsoft/dotnet/blob/master/releases/net461/README.md) 
+        * [.NET 4.7](https://github.com/Microsoft/dotnet/blob/master/releases/net47/README.md) 
+        * [.NET Standard 1.6](https://github.com/dotnet/standard/blob/master/docs/versions/netstandard1.6.md) (.NET Core >=1.0, .NET >=4.6.1, Mono >=4.6 etc) 
+        * [.NET Standard 2.0](https://github.com/dotnet/standard/blob/master/docs/versions/netstandard2.0.md) (.NET Core >=2.0, .NET >=4.6.1, Mono >=5.4 etc)
     draft: false
     force_update: true
     prerelease: false
